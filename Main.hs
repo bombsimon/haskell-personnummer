@@ -1,8 +1,10 @@
 module Main where
 
-import qualified Personnummer (someFunc)
+import Personnummer (luhn, valid)
+
+getStr :: String
+getStr = "Hello There"
 
 main :: IO ()
-main = do
-  putStrLn "Hello, Haskell!"
-  Personnummer.someFunc
+main =
+    print $ Personnummer.luhn [9,0,0,1,0,1,0,0,1]
