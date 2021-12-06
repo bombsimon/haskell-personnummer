@@ -6,16 +6,17 @@ data Gender = Male | Female
   deriving (Eq, Show)
 
 charToInt :: Char -> Int
-charToInt = read . (:[])
+charToInt = read . (: [])
 
 valid :: String -> Bool
 valid raw =
-        False
+  False
 
 luhn :: [Int] -> Int
-luhn = (10-)
-     . (`mod` 10)
-     . sum
-     . map charToInt
-     . concatMap show
-     . zipWith (*) (cycle [2,1])
+luhn =
+  (10 -)
+    . (`mod` 10)
+    . sum
+    . map charToInt
+    . concatMap show
+    . zipWith (*) (cycle [2, 1])

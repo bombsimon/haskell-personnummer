@@ -1,4 +1,4 @@
-# Revision history for Personnummer
+# Revision history for haskell-personnummer
 
 ## 0.1.0.0 -- YYYY-mm-dd
 
