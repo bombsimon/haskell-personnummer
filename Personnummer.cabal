@@ -1,4 +1,4 @@
-cabal-version:      2.4
+cabal-version:      3.6
 name:               Personnummer
 version:            0.1.0.0
 synopsis:           Validate Swedish personal identification numbers
@@ -12,7 +12,10 @@ extra-source-files: CHANGELOG.md
 
 library
     exposed-modules:  Personnummer
-    build-depends:    base ^>=4.14.3.0
+    build-depends:
+        base ^>=4.14.3.0,
+        time ^>=1.12.1,
+        regex-compat ^>=0.95.2.1
     hs-source-dirs:   src
     default-language: Haskell2010
 
@@ -21,16 +24,18 @@ executable Personnummer
     build-depends:
         base ^>=4.14.3.0,
         Personnummer
-
     hs-source-dirs:   app
     default-language: Haskell2010
 
 test-suite Personnummer-tests
     default-language:    Haskell2010
     type:                exitcode-stdio-1.0
-    hs-source-dirs:      src, tests, examples
-    main-is:             tests/PersonnummerTest.hs
-    build-depends:
-        base ^>=4.12.0.0,
-        HUnit ^>=1.6.0,
+    hs-source-dirs:      src, tests
+    main-is:             PersonnummerTest.hs
+    other-modules:
         Personnummer
+    build-depends:
+        base ^>=4.14.3.0,
+        time ^>=1.12.1,
+        regex-compat ^>=0.95.2.1,
+        HUnit ^>=1.6.0
