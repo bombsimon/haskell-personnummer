@@ -1,13 +1,13 @@
 module Main where
 
-import Personnummer (valid)
+import Personnummer (isValid, toPersonnummer)
 import Test.HUnit
 
 tests' :: Test
 tests' =
   test
-    [ "invalid input" ~: "(valid \"not-parsable\")" ~: False ~=? Personnummer.valid "not-parsable",
-      "invalid date" ~: "(valid \"199001410017\")" ~: False ~=? Personnummer.valid "199001410017"
+    [ "invalid input" ~: "(isValid (toPersonnummer \"not-parsable\"))" ~: False ~=? isValid (toPersonnummer "not-parsable"),
+      "invalid date" ~: "(isValid (toPersonnummer \"199001410017\"))" ~: False ~=? isValid (toPersonnummer "199001410017"),
     ]
 
 main :: IO Counts
