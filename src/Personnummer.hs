@@ -1,14 +1,26 @@
-module Personnummer (isValid, toPersonnummer) where
+module Personnummer
+  ( Gender (Female, Male),
+    Personnummer,
+    control,
+    date,
+    divider,
+    gender,
+    getAgePure,
+    isCoordination,
+    isFemale,
+    isMale,
+    isValid,
+    number,
+    toPersonnummer,
+  )
+where
 
-import Control.Monad
 import Data.Maybe (fromJust, fromMaybe, isNothing)
 import Data.Time
   ( UTCTime,
     defaultTimeLocale,
     formatTime,
-    getCurrentTime,
     parseTimeM,
-    parseTimeOrError,
     toGregorian,
   )
 import Data.Time.Clock (utctDay)
@@ -57,6 +69,7 @@ checksum adds up to the control digit.
 isValid :: Personnummer -> Bool
 isValid p
   | isNothing (date p) = False
+  | number p == 0 = False
   | luhnP p == control p = True
   | otherwise = False
 
@@ -192,8 +205,8 @@ Use luhn algoritm to calculate the control digit.
 -}
 luhn :: [Int] -> Int
 luhn =
-  (10 -)
-    . (`mod` 10)
+  (`mod` 10)
+    . (10 -)
     . sum
     . map (read . (: []))
     . concatMap show
