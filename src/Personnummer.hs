@@ -78,7 +78,7 @@ isValid p
 Get the gender for the Personnummber.
 -}
 gender :: Personnummer -> Gender
-gender p = case number p `mod` 10 `mod` 20 of
+gender p = case mod (mod (number p) 10) 2 of
   0 -> Female
   _ -> Male
 
