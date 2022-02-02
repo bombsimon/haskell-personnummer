@@ -10,7 +10,7 @@ numbers](<https://en.wikipedia.org/wiki/Personal_identity_number_(Sweden)>) with
 import Personnummer (isValid, toPersonnummer)
 
 pnrIsValid :: bool
-pnrIsValid = isValid $ toPersonnummer "19900101-0007"
+pnrIsValid = isValid $ toPersonnummer "19900101-0017"
 ```
 
 > **NOTE** To build this package you need to be able to build cabal-stack which
@@ -39,9 +39,14 @@ cabal test
 ### Development
 
 ```sh
-cabal repl
-*Personnummer> :r
-Ok, one module loaded.
+$ cabal repl
+*Personnummer> let pnr = toPersonnummer "9001010017"
+*Personnummer> isValid pnr
+True
+*Personnummer> gender pnr
+Male
+*Personnummer> format pnr True
+"19900101-0017"
 ```
 
 ## Formatter
