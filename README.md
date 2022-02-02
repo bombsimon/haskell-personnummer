@@ -9,13 +9,13 @@ numbers](<https://en.wikipedia.org/wiki/Personal_identity_number_(Sweden)>) with
 ```haskell
 import Personnummer (isValid, toPersonnummer)
 
-pnrIsValid :: bool
+pnrIsValid :: Bool
 pnrIsValid = isValid $ toPersonnummer "19900101-0017"
 ```
 
-> **NOTE** To build this package you need to be able to build cabal-stack which
-> (I think?) requires `llvm`. This can be a bit tricky if you're on macOS since
-> `brew` won't link `llvm` if you have Xcode installed.
+> **NOTE** To build this package with `llvm` backend which cabal defaults to
+> (I think?) on macOS you might need some changes since `brew` won't link
+> `llvm` if you have Xcode installed.
 >
 > One simple thing can be to just ensure the `brew` `llvm` directory is first
 > in your `PATH` when using `cabal`.
@@ -24,16 +24,18 @@ pnrIsValid = isValid $ toPersonnummer "19900101-0017"
 PATH=$(brew --prefix)/opt/llvm/bin:$PATH cabal test
 ```
 
+Or just specify the compiler with `--ghc-option=-f[llvm|asm]`
+
 ### Run example
 
 ```sh
-cabal run Personnummer
+cabal run Personnummer --ghc-option=-fllvm
 ```
 
 ### Test
 
 ```sh
-cabal test
+cabal test --ghc-option=-fllvm
 ```
 
 ### Development
