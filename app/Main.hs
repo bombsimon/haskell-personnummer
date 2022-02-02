@@ -4,11 +4,19 @@ import qualified Personnummer
 
 main :: IO ()
 main = do
-  -- putStrLn $ "Is " ++ n ++ " valid? Result: " ++ show (Personnummer.valid n)
-  -- where n = "19900101-0001"
-
-  putStrLn $ "Test: " ++ toStr (Personnummer.matchesToDate [20, 20, 2, 29])
+  if Personnummer.isValid pnr
+    then
+      putStrLn $
+        "The person with personal identity number "
+          ++ pnrFmt
+          ++ " is a "
+          ++ gender
+          ++ " of age "
+          ++ age
+          ++ " at 2022-01-01"
+    else putStrLn "Invalid personal identity number"
   where
-    toStr x = case x of
-      Just x -> show x
-      Nothing -> show "No dice :("
+    pnr = Personnummer.toPersonnummer "199001010017"
+    pnrFmt = Personnummer.format pnr True
+    gender = show $ Personnummer.gender pnr
+    age = show $ Personnummer.getAgePure pnr (2022, 1, 1)

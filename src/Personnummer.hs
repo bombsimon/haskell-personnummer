@@ -10,6 +10,7 @@ module Personnummer
     isFemale,
     isMale,
     isValid,
+    format,
     number,
     toPersonnummer,
   )
