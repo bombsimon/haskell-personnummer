@@ -47,8 +47,12 @@ $ cabal repl
 True
 *Personnummer> gender pnr
 Male
+*Personnummer> isFemale pnr
+False
 *Personnummer> format pnr True
 "19900101-0017"
+*Personnummer> getAge pnr
+32
 ```
 
 ## Formatter

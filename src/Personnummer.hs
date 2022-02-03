@@ -5,6 +5,7 @@ module Personnummer
     date,
     divider,
     gender,
+    getAge,
     getAgePure,
     isCoordination,
     isFemale,
@@ -21,6 +22,7 @@ import Data.Time
   ( UTCTime,
     defaultTimeLocale,
     formatTime,
+    getCurrentTime,
     parseTimeM,
     toGregorian,
   )
@@ -93,6 +95,17 @@ Check if the Personnummber belongs to a Male.
 -}
 isMale :: Personnummer -> Bool
 isMale p = gender p == Male
+
+{-
+Get the age based on the current time.
+-}
+getAge :: Personnummer -> IO Int
+getAge p =
+  do
+    now <- getCurrentTime
+    let (y, m, d) = toGregorian $ utctDay now
+    let age = getAgePure p (fromIntegral y, m, d)
+    return age
 
 {-
 Get age pure doesn't calculate the current time but instead asks the caller to

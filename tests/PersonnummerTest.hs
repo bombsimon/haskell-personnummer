@@ -1,6 +1,6 @@
 module Main where
 
-import Personnummer (Gender (Female, Male), gender, isCoordination, isValid, toPersonnummer)
+import Personnummer
 import System.Exit (ExitCode (ExitFailure), exitSuccess, exitWith)
 import Test.HUnit
   ( Counts (errors, failures),
@@ -68,6 +68,22 @@ validCoordination =
         ("640327-3813", False)
       ]
 
+getPersonAge :: Test
+getPersonAge =
+  test $
+    map
+      ( \(pnr, simulatedDate, expectedAge) ->
+          "get age"
+            ~: "(getAgePure (toPersonnummer \"" ++ pnr ++ "\") " ++ show simulatedDate ++ ")"
+            ~: expectedAge
+              ~=? getAgePure (toPersonnummer pnr) simulatedDate
+      )
+      [ ("199001010000", (2000, 1, 2), 10),
+        ("199001020000", (2000, 1, 2), 10),
+        ("199001030000", (2000, 1, 2), 9),
+        ("189901010000", (2000, 1, 2), 101)
+      ]
+
 main :: IO Counts
 main = do
   results <-
@@ -75,7 +91,8 @@ main = do
       TestList
         [ TestLabel "Valid personnummer" validPersonnummer,
           TestLabel "Check gender" checkGender,
-          TestLabel "Valid coordination number" validCoordination
+          TestLabel "Valid coordination number" validCoordination,
+          TestLabel "Test getting age" getPersonAge
         ]
   if errors results + failures results == 0
     then exitSuccess

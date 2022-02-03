@@ -1,5 +1,5 @@
 # Revision history for haskell-personnummer
 
-## 0.1.0.0 -- YYYY-mm-dd
+## 0.1.0.0 -- 2022-02-03
 
-* First version. Released on an unsuspecting world.
+* First version.

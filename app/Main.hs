@@ -4,6 +4,7 @@ import qualified Personnummer
 
 main :: IO ()
 main = do
+  age <- Personnummer.getAge pnr
   if Personnummer.isValid pnr
     then
       putStrLn $
@@ -12,11 +13,9 @@ main = do
           ++ " is a "
           ++ gender
           ++ " of age "
-          ++ age
-          ++ " at 2022-01-01"
+          ++ show age
     else putStrLn "Invalid personal identity number"
   where
     pnr = Personnummer.toPersonnummer "199001010017"
     pnrFmt = Personnummer.format pnr True
     gender = show $ Personnummer.gender pnr
-    age = show $ Personnummer.getAgePure pnr (2022, 1, 1)
