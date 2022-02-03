@@ -136,7 +136,7 @@ format p long =
     f = if long then "%Y%m%d" else "%y%m%d"
     t = case date p of
       Just d -> formatTime defaultTimeLocale f d
-      Nothing -> if long then "00000000" else "000000"
+      Nothing -> ""
 
 {-
 Construct a Personnummer from a string.
