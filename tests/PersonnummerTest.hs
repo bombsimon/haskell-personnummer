@@ -1,5 +1,6 @@
 module Main where
 
+import Data.Maybe
 import Personnummer
 import System.Exit (ExitCode (ExitFailure), exitSuccess, exitWith)
 import Test.HUnit
@@ -19,10 +20,9 @@ validPersonnummer =
           "validate personnummer"
             ~: "(isValid (toPersonnummer \"" ++ pnr ++ "\"))"
             ~: valid
-              ~=? isValid (toPersonnummer pnr)
+              ~=? isValid (fromJust $ toPersonnummer pnr)
       )
-      [ ("not-parsable", False),
-        ("6403273813", True),
+      [ ("6403273813", True),
         ("510818-9167", True),
         ("19900101-0017", True),
         ("19130401+2931", True),
@@ -44,7 +44,7 @@ checkGender =
           "get gender"
             ~: "(gender (toPersonnummer \"" ++ pnr ++ "\"))"
             ~: expectedGender
-              ~=? gender (toPersonnummer pnr)
+              ~=? gender (fromJust $ toPersonnummer pnr)
       )
       [ ("19090903-6600", Female),
         ("19900101-0017", Male),
@@ -61,7 +61,7 @@ validCoordination =
           "get gender"
             ~: "(isCoordination  (toPersonnummer \"" ++ pnr ++ "\"))"
             ~: expectedIsCoordination
-              ~=? isCoordination (toPersonnummer pnr)
+              ~=? isCoordination (fromJust $ toPersonnummer pnr)
       )
       [ ("800161-3294", True),
         ("800101-3294", False),
@@ -76,7 +76,7 @@ getPersonAge =
           "get age"
             ~: "(getAgePure (toPersonnummer \"" ++ pnr ++ "\") " ++ show simulatedDate ++ ")"
             ~: expectedAge
-              ~=? getAgePure (toPersonnummer pnr) simulatedDate
+              ~=? getAgePure (fromJust $ toPersonnummer pnr) simulatedDate
       )
       [ ("199001010000", (2000, 1, 2), 10),
         ("199001020000", (2000, 1, 2), 10),

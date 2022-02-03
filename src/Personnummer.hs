@@ -28,7 +28,7 @@ import Data.Time
   )
 import Data.Time.Clock (utctDay)
 import Text.Printf (printf)
-import Text.Read (readMaybe)
+import Text.Read (parens, readMaybe)
 import Text.Regex
   ( Regex,
     matchRegex,
@@ -57,7 +57,7 @@ valid date. Even if the Personnummer is a coordination number we store a proper
 date and set isCoordination to True instead.
 -}
 data Personnummer = Personnummer
-  { date :: Maybe UTCTime,
+  { date :: UTCTime,
     number :: Int,
     control :: Int, -- Always three digits but may lead with zero.
     divider :: Char,
@@ -66,12 +66,18 @@ data Personnummer = Personnummer
   deriving (Eq, Show)
 
 {-
+Try to convert a string to a Personnummer and if successful, return if it's
+valid. If it can't be converted to a Perosnnummer, return Fasle.
+-}
+isValidString :: String -> Bool
+isValidString s = maybe False isValid $ toPersonnummer s
+
+{-
 Check if a Personnummber is valid. That is, if it is a valid date and the
 checksum adds up to the control digit.
 -}
 isValid :: Personnummer -> Bool
 isValid p
-  | isNothing (date p) = False
   | number p == 0 = False
   | luhnP p == control p = True
   | otherwise = False
@@ -114,12 +120,11 @@ will calculate the age.
 -}
 getAgePure :: Personnummer -> (Int, Int, Int) -> Int
 getAgePure p (y, m, d)
-  | isNothing $ date p = 0
   | m > m2 = y - y2
   | m == m2 && d >= d2 = y - y2
   | otherwise = y - y2 - 1
   where
-    (year, m2, d2) = toGregorian $ utctDay (fromJust $ date p)
+    (year, m2, d2) = toGregorian $ utctDay $ date p
     y2 = fromIntegral year
 
 {-
@@ -134,41 +139,33 @@ format p long =
     ++ printf "%d" (control p)
   where
     f = if long then "%Y%m%d" else "%y%m%d"
-    t = case date p of
-      Just d -> formatTime defaultTimeLocale f d
-      Nothing -> ""
+    t = formatTime defaultTimeLocale f $ date p
 
 {-
 Construct a Personnummer from a string.
 -}
-toPersonnummer :: String -> Personnummer
-toPersonnummer s =
-  maybe
-    Personnummer
-      { date = Nothing,
-        number = 0,
-        control = 0,
-        divider = '-',
-        isCoordination = False
-      }
-    toPersonnummerFrommatches
-    $ matchRegex pnrRe s
+toPersonnummer :: String -> Maybe Personnummer
+toPersonnummer s = toPersonnummerFrommatches =<< matchRegex pnrRe s
 
 {-
 Construct a Personnummer when we know we have valid matches.
 -}
-toPersonnummerFrommatches :: [String] -> Personnummer
-toPersonnummerFrommatches m =
-  Personnummer
-    { date = matchesToDate x,
-      number = x !! 5,
-      control = x !! 6,
-      divider = d,
-      isCoordination = x !! 3 > 31
-    }
+toPersonnummerFrommatches :: [String] -> Maybe Personnummer
+toPersonnummerFrommatches m
+  | isNothing d = Nothing
+  | otherwise =
+    Just
+      Personnummer
+        { date = fromJust d,
+          number = x !! 5,
+          control = x !! 6,
+          divider = div,
+          isCoordination = x !! 3 > 31
+        }
   where
     x = map intOrZeroFromString m
-    d = if m !! 4 == "+" then '+' else '-'
+    d = matchesToDate x
+    div = if m !! 4 == "+" then '+' else '-'
 
 {-
 Try to read string as int and if it fails, return 0
@@ -207,12 +204,9 @@ See more at https://en.wikipedia.org/wiki/Luhn_algorithm
 -}
 luhnP :: Personnummer -> Int
 luhnP p =
-  case date p of
-    Nothing -> -1
-    Just t ->
-      luhn $
-        map (read . (: [])) $
-          formatTime defaultTimeLocale "%y%m%d" t ++ printf "%03d" (number p)
+  luhn $
+    map (read . (: [])) $
+      formatTime defaultTimeLocale "%y%m%d" (date p) ++ printf "%03d" (number p)
 
 {-
 Use luhn algoritm to calculate the control digit.

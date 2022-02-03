@@ -32,17 +32,17 @@ Or just specify the compiler with `--ghc-option=-f[llvm|asm]`
 cabal run Personnummer --ghc-option=-fllvm
 ```
 
-### Test
-
-```sh
-cabal test --ghc-option=-fllvm
-```
-
-### Development
+### REPL
 
 ```sh
 $ cabal repl
-*Personnummer> let pnr = toPersonnummer "9001010017"
+*Personnummer> isValidString "199001010018"
+Fasle
+```
+
+```sh
+$ cabal repl
+*Personnummer> let pnr = fromJust $ toPersonnummer "9001010017"
 *Personnummer> isValid pnr
 True
 *Personnummer> gender pnr
@@ -53,6 +53,12 @@ False
 "19900101-0017"
 *Personnummer> getAge pnr
 32
+```
+
+### Test
+
+```sh
+cabal test --ghc-option=-fllvm
 ```
 
 ## Formatter
