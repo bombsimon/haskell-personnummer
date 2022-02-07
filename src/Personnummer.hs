@@ -27,6 +27,7 @@ import Data.Time
     toGregorian,
   )
 import Data.Time.Clock (utctDay)
+import System.IO (localeEncoding)
 import Text.Printf (printf)
 import Text.Read (parens, readMaybe)
 import Text.Regex
@@ -132,14 +133,19 @@ Format to consistent Personnummer output, either in long format (including
 century) or short format (just two digits)
 -}
 format :: Personnummer -> Bool -> String
-format p long =
-  t
+format p long
+  | long = formatPattern p "%Y%m%d"
+  | otherwise = formatPattern p "%y%m%d"
+
+{-
+Format based on given pattern.
+-}
+formatPattern :: Personnummer -> String -> String
+formatPattern p ptrn =
+  formatTime defaultTimeLocale ptrn (date p)
     ++ [divider p]
     ++ printf "%03d" (number p)
     ++ printf "%d" (control p)
-  where
-    f = if long then "%Y%m%d" else "%y%m%d"
-    t = formatTime defaultTimeLocale f $ date p
 
 {-
 Construct a Personnummer from a string.

@@ -1,21 +1,23 @@
 module Main where
 
-import qualified Personnummer
+import Personnummer (Personnummer, format, gender, getAge, isValid, toPersonnummer)
 
 main :: IO ()
 main = do
-  age <- Personnummer.getAge pnr
-  if Personnummer.isValid pnr
+  case toPersonnummer "19900101-0017" of
+    Just pnr -> showValidPnr pnr
+    Nothing -> putStrLn "Invalid format"
+
+showValidPnr :: Personnummer -> IO ()
+showValidPnr pnr = do
+  age <- getAge pnr
+  if isValid pnr
     then
       putStrLn $
         "The person with personal identity number "
-          ++ pnrFmt
+          ++ format pnr True
           ++ " is a "
-          ++ gender
+          ++ show (gender pnr)
           ++ " of age "
           ++ show age
     else putStrLn "Invalid personal identity number"
-  where
-    pnr = Personnummer.toPersonnummer "199001010017"
-    pnrFmt = Personnummer.format pnr True
-    gender = show $ Personnummer.gender pnr
