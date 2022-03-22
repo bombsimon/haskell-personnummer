@@ -13,7 +13,6 @@ jobs:
           - 3.6
         ghc:
           - 8.10.7
-          - 9.2.2
     env:
       CONFIG: "--enable-tests --enable-benchmarks"
     steps:
