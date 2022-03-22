@@ -1,5 +1,7 @@
 # haskell-personnummer
 
+[![Test and lint](https://github.com/bombsimon/haskell-personnummer/actions/workflows/haskell.yml/badge.svg)](https://github.com/bombsimon/haskell-personnummer/actions/workflows/haskell.yml)
+
 Validate Swedish [personal identity
 numbers](<https://en.wikipedia.org/wiki/Personal_identity_number_(Sweden)>) with
 [Haskell](https://www.haskell.org/)
