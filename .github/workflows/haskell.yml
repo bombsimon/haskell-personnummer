@@ -12,12 +12,12 @@ jobs:
         cabal:
           - 3.6
         ghc:
-          - 8.10.7
+          - 9.2.5
     env:
       CONFIG: "--enable-tests --enable-benchmarks"
     steps:
-      - uses: actions/checkout@v2.3.4
-      - uses: haskell/actions/setup@v1.2
+      - uses: actions/checkout@v3
+      - uses: haskell/actions/setup@v2
         with:
           ghc-version: ${{ matrix.ghc }}
           cabal-version: ${{ matrix.cabal }}
@@ -30,15 +30,13 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - name: 'Set up HLint'
-      uses: rwe/actions-hlint-setup@v1
-      with:
-        version: 3.3.6
+      - name: 'Set up HLint'
+        uses: haskell/actions/hlint-setup@v2
 
-    - name: 'Run HLint'
-      uses: rwe/actions-hlint-run@v2
-      with:
-        path: '["src/", "tests/", "app/"]'
-        fail-on: warning
+      - name: 'Run HLint'
+        uses: haskell/actions/hlint-run@v2
+        with:
+          path: '["src/", "tests/", "app/"]'
+          fail-on: warning
